@@ -1,0 +1,40 @@
+export interface Room {
+  id: number;
+  roomNumber: string;
+  type: "single" | "double" | "suite" | "deluxe";
+  price: number;
+  roomState: "free" | "occupied" | "cleaning" | "maintenance";
+  floor: number;
+  description: string;
+}
+
+export interface Guest {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  phoneNumber: string;
+  nationality: string;
+  document: string;
+}
+
+export interface Reservation {
+  id: number;
+  guestId: number;
+  roomId: number;
+  checkIn: string;
+  checkOut: string;
+  reservationState: "confirmed" | "waiting" | "canceled" | "completed";
+  kids: number;
+  adults: number;
+  specialNotes: string;
+  totalPrice: number;
+}
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: "admin" | "receptionist";
+  password: string;
+}

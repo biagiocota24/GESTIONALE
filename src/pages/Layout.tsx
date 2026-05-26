@@ -15,6 +15,7 @@ const links = [
     label: "Reservations",
     icon: <MdCalendarMonth size={18} />,
   },
+  { to: "/login", label: "Login", icon: <MdPeople size={18} /> },
 ];
 
 const Layout = function () {

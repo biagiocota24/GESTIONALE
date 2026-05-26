@@ -54,7 +54,7 @@ const GuestCards = function ({ filteredGuests, search }: guestCardProps) {
             </tr>
           </thead>
           <tbody>
-            {filteredGuests.length === 0 ? (
+            {(filteredGuests ?? []).length === 0 ? (
               <tr>
                 <td
                   colSpan={6}
@@ -68,7 +68,7 @@ const GuestCards = function ({ filteredGuests, search }: guestCardProps) {
                 </td>
               </tr>
             ) : (
-              filteredGuests.map((g, i) => (
+              (filteredGuests ?? []).map((g, i) => (
                 <tr key={g.id} style={{ borderTop: "0.5px solid #f0f0f0" }}>
                   <td style={{ padding: "12px 16px", color: "#888" }}>
                     {i + 1}
@@ -133,7 +133,7 @@ const GuestCards = function ({ filteredGuests, search }: guestCardProps) {
       </div>
       <div className="d-md-none">
         <Row className="g-3">
-          {filteredGuests.map((g, i) => (
+          {(filteredGuests ?? []).map((g, i) => (
             <Col key={g.id} xs={12} sm={6}>
               <div
                 style={{

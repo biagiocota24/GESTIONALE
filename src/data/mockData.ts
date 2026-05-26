@@ -1,34 +1,102 @@
-import type { User } from "../interfaces/interfaces";
-
-export const aggiungiNelloStorage = (dove: string, cosa: unknown) => {
-  const esistente = localStorage.getItem(dove);
-  const array = esistente ? JSON.parse(esistente) : [];
-  array.push(cosa);
-  localStorage.setItem(dove, JSON.stringify(array));
-};
-
-export const users: User[] = [
+export const initialRooms: Room[] = [
   {
     id: 1,
-    name: "Admin",
-    email: "admin@hotel.com",
-    role: "admin",
-    password: "admin123",
+    roomNumber: "101",
+    type: "single",
+    price: 80,
+    roomState: "free",
+    floor: 1,
+    description: "Cozy single room with garden view",
+    capacity: 2,
   },
   {
     id: 2,
-    name: "Mario Bianchi",
-    email: "mario@hotel.com",
-    role: "receptionist",
-    password: "mario123",
+    roomNumber: "102",
+    type: "single",
+    price: 80,
+    roomState: "free",
+    floor: 1,
+    description: "Cozy single room with garden view",
+    capacity: 2,
   },
   {
     id: 3,
-    name: "Laura Conti",
-    email: "laura@hotel.com",
-    role: "receptionist",
-    password: "laura123",
+    roomNumber: "103",
+    type: "double",
+    price: 130,
+    roomState: "free",
+    floor: 1,
+    description: "Spacious double room with balcony",
+    capacity: 4,
+  },
+  {
+    id: 4,
+    roomNumber: "104",
+    type: "double",
+    price: 130,
+    roomState: "free",
+    floor: 1,
+    description: "Spacious double room with balcony",
+    capacity: 4,
+  },
+  {
+    id: 5,
+    roomNumber: "201",
+    type: "double",
+    price: 140,
+    roomState: "free",
+    floor: 2,
+    description: "Double room with sea view",
+    capacity: 4,
+  },
+  {
+    id: 6,
+    roomNumber: "202",
+    type: "deluxe",
+    price: 200,
+    roomState: "free",
+    floor: 2,
+    description: "Deluxe room with jacuzzi and sea view",
+    capacity: 6,
+  },
+  {
+    id: 7,
+    roomNumber: "203",
+    type: "deluxe",
+    price: 200,
+    roomState: "free",
+    floor: 2,
+    description: "Deluxe room with private terrace",
+    capacity: 5,
+  },
+  {
+    id: 8,
+    roomNumber: "204",
+    type: "suite",
+    price: 350,
+    roomState: "free",
+    floor: 2,
+    description: "Luxury suite with panoramic view",
+    capacity: 3,
+  },
+  {
+    id: 9,
+    roomNumber: "301",
+    type: "suite",
+    price: 350,
+    roomState: "free",
+    floor: 3,
+    description: "Luxury suite with living room",
+    capacity: 4,
+  },
+  {
+    id: 10,
+    roomNumber: "302",
+    type: "suite",
+    price: 400,
+    roomState: "free",
+    floor: 3,
+    description: "Presidential suite with private terrace",
+    capacity: 5,
   },
 ];
-
-

@@ -1,9 +1,12 @@
-const Login = function(){
-    return(
-        <div></div>
-    )
-}
 
+import LoginLayout from "../components/login/LoginLayout";
 
+const Login = function () {
+  return (
+    <>
+      <LoginLayout />
+    </>
+  );
+};
 
-export default Login
+export default Login;

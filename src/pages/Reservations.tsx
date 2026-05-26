@@ -1,20 +1,16 @@
 import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import ReservationCard from "../components/reservations/ReservationsCards";
-import { useSelector } from "react-redux";
+import { useHotelStore } from "../zustand/store";
 
 const Reservations = function () {
-  const guests = useSelector((state: RootState) => state.guests.guests);
-  const rooms = useSelector((state: RootState) => state.rooms.rooms);
-  const reservations = useSelector(
-    (state: RootState) => state.reservations.reservations,
-  );
+  const { rooms, guests, reservations } = useHotelStore();
   const [select, setSelect] = useState("all");
 
   const filteredReservations =
     select === "all"
       ? reservations
-      : reservations.filter((res) => res.reservationState === select);
+      : (reservations ?? []).filter((res) => res.reservationState === select);
   return (
     <Container fluid="lg">
       <Row>
@@ -30,9 +26,12 @@ const Reservations = function () {
             }}
           >
             <div>
-              <p style={{ fontSize: 22, fontWeight: 500, margin: 0 }}>Rooms</p>
+              <p style={{ fontSize: 22, fontWeight: 500, margin: 0 }}>
+                Reservations
+              </p>
               <p style={{ fontSize: 13, color: "#888", margin: "4px 0 0" }}>
-                {filteredReservations.length} total Reservations
+                {filteredReservations ? filteredReservations.length : 0} total
+                Reservations
               </p>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -62,7 +61,7 @@ const Reservations = function () {
         </Col>
       </Row>
       <Row className="g-3">
-        {filteredReservations.map((r) => (
+        {(filteredReservations ?? []).map((r) => (
           <Col key={r.id} xs={12} md={6} xl={4}>
             <ReservationCard
               reservation={r}

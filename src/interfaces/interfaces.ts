@@ -6,7 +6,7 @@ export interface Room {
   roomState: "free" | "occupied" | "cleaning" | "maintenance";
   floor: number;
   description: string;
-  capacity : number
+  capacity: number;
 }
 
 export interface Guest {
@@ -14,8 +14,10 @@ export interface Guest {
   name: string;
   surname: string;
   email: string;
+  password: string;
   phoneNumber: string;
   nationality: string;
+  docType: string;
   document: string;
 }
 
@@ -36,6 +38,6 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  role: "admin" | "receptionist";
+  role: "admin";
   password: string;
 }

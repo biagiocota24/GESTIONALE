@@ -7,13 +7,24 @@ import Rooms from "./pages/Rooms";
 import Guests from "./pages/Guests";
 import Reservations from "./pages/Reservations";
 import ReservationsForm from "./pages/ReservationsForm";
+import RegistartionForm from "./components/login/registrationForm";
+import LoginForm from "./components/login/LoginForm";
 
 function App() {
   return (
     <BrowserRouter>
+      {/* ROUTE PER CLIENTI */}
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Login />}>
+          <Route path="/" element={<LoginForm />} />
+          <Route path="registrationForm" element={<RegistartionForm />} />
+        </Route>
+        <Route path="/user" element={<Layout />}>
+          <Route path="rooms" element={<Rooms />} />
+          <Route path="reservationForm/:id" element={<ReservationsForm />} />
+        </Route>
+        {/* ROUTE PER ADMIN */}
+        <Route path="/admin" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="rooms" element={<Rooms />} />
           <Route path="guests" element={<Guests />} />

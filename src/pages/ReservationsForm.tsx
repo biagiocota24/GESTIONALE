@@ -5,24 +5,17 @@ import Form from "react-bootstrap/Form";
 import { getNames } from "country-list";
 import Row from "react-bootstrap/Row";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../redux/store";
-import { addReservation } from "../redux/actions/reservationAction";
-import { aggiungiNelloStorage } from "../data/mockData";
+import { useHotelStore } from "../zustand/store";
 
 const ReservationsForm = function () {
-  const reservations = useSelector(
-    (state: RootState) => state.reservations.reservations,
-  );
-  const rooms = useSelector((state: RootState) => state.rooms.rooms);
-  const guests = useSelector((state: RootState) => state.guests.guests);
+  const { rooms, guests, addReservation, addGuest} = useHotelStore();
+
   const navigate = useNavigate();
   const params = useParams();
   const thisRoom = rooms.find((r) => r.id === Number(params.id));
   const [validated, setValidated] = useState(false);
   const nationalities = getNames();
   const today: string = new Date().toISOString().split("T")[0];
-  const dispatch = useDispatch();
 
   //TUTTI IL VALORI DEL FORM
   const [firstName, setFirstName] = useState("");
@@ -87,12 +80,11 @@ const ReservationsForm = function () {
     console.log("New Reservation:", newReservation);
 
     // ← qui dopo aggiungeremo dispatch per salvare in Redux
-    // dispatch(addReservation(newReservation));
-    aggiungiNelloStorage("reservations", newReservation);
+    addReservation(newReservation);
 
     const alreadyGuest = guests.find((g) => newGuest.id === g.id);
     if (!alreadyGuest) {
-      aggiungiNelloStorage("guests", newGuest);
+      addGuest(newGuest);
     }
     navigate("/");
   };

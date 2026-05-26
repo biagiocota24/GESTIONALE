@@ -1,10 +1,10 @@
 import { Col, Container, Row } from "react-bootstrap";
 import { useState } from "react";
 import GuestCards from "../components/guests/GuestCards";
-import { useSelector } from "react-redux";
+import { useHotelStore } from "../zustand/store";
 
 const Guests = function () {
-  const guests = useSelector((state: RootState) => state.guests.guests);
+  const { guests } = useHotelStore();
   const [search, setSearch] = useState("");
 
   const filteredGuests =
@@ -15,7 +15,8 @@ const Guests = function () {
             `${g.name.toLowerCase()}${g.surname.toLowerCase()}`
               .toLowerCase()
               .includes(search.toLowerCase()) ||
-            g.id.toString().includes(search)
+            g.id.toString().includes(search) ||
+            ""
           );
         });
   return (
@@ -35,7 +36,7 @@ const Guests = function () {
             <div>
               <p style={{ fontSize: 22, fontWeight: 500, margin: 0 }}>Guests</p>
               <p style={{ fontSize: 13, color: "#888", margin: "4px 0 0" }}>
-                {filteredGuests.length} guests total
+                {filteredGuests ? filteredGuests.length : 0} guests total
               </p>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>

@@ -1,14 +1,15 @@
 import { Col, Container, Row } from "react-bootstrap";
 import { useState } from "react";
 import RoomCard from "../components/rooms/RoomCard";
-import { useSelector } from "react-redux";
+import { useHotelStore } from "../zustand/store";
 
 const Rooms = function () {
-  const rooms = useSelector((state: RootState) => state.rooms.rooms);
-
+  const {rooms } = useHotelStore()
   const [select, setSelect] = useState("all");
+
   const filteredRooms =
     select === "all" ? rooms : rooms.filter((r) => r.roomState === select);
+    
   return (
     <Container>
       <Row>

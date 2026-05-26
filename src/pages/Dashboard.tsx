@@ -9,16 +9,10 @@ import StateCard from "../components/dashboard/StateCards";
 import SliceChart from "../components/dashboard/SliceChart";
 import MyBarChart from "../components/dashboard/BarChart";
 import Tabella from "../components/dashboard/Tabella";
-import { useSelector } from "react-redux";
-import type { RootState } from "../redux/store";
+import { useHotelStore } from "../zustand/store";
 
 const Dashboard = function () {
-  const guests = useSelector((state: RootState) => state.guests.guests);
-  const rooms = useSelector((state: RootState) => state.rooms.rooms);
-  const reservations = useSelector(
-    (state: RootState) => state.reservations.reservations,
-  );
-
+  const { rooms, guests, reservations } = useHotelStore();
   const stats = [
     {
       label: "Total Rooms",
@@ -70,7 +64,8 @@ const Dashboard = function () {
     },
     {
       name: "Maintenance",
-      value: rooms.filter((room) => room.roomState === "maintenance").length,
+      value:
+        rooms.filter((room) => room.roomState === "maintenance").length || 0,
       color: "orange",
     },
   ];

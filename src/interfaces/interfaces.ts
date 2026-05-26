@@ -6,6 +6,7 @@ export interface Room {
   roomState: "free" | "occupied" | "cleaning" | "maintenance";
   floor: number;
   description: string;
+  capacity : number
 }
 
 export interface Guest {

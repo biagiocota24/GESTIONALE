@@ -1,12 +1,16 @@
 import { Col } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import type { Room } from "../../interfaces/interfaces";
+import { useHotelStore } from "../../zustand/store";
 
 interface RoomCardProps {
   room: Room;
 }
 
 const RoomCard = function ({ room }: RoomCardProps) {
+  const{currentUser} = useHotelStore()
   const navigate = useNavigate();
+  const params = useParams();
   const stateColors: Record<string, { bg: string; color: string }> = {
     free: { bg: "#e1f5ee", color: "#0f6e56" },
     occupied: { bg: "#fcebeb", color: "#a32d2d" },
@@ -139,6 +143,7 @@ const RoomCard = function ({ room }: RoomCardProps) {
                 background: "transparent",
                 cursor: "pointer",
               }}
+              onClick={() => navigate(`/user/${currentUser.id}/calendario/${room.id}`)}
             >
               Details
             </button>
@@ -165,7 +170,9 @@ const RoomCard = function ({ room }: RoomCardProps) {
                     ? "pointer"
                     : "not-allowed",
               }}
-              onClick={() => navigate(`/reservationForm/${room.id}`)}
+              onClick={() =>
+                navigate(`/user/${params.id}/reservationForm/${room.id}`)
+              }
             >
               {room.roomState === "occupied"
                 ? "Occupied"

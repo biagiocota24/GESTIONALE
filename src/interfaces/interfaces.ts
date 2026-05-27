@@ -19,6 +19,7 @@ export interface Guest {
   nationality: string;
   docType: string;
   document: string;
+  role: string;
 }
 
 export interface Reservation {

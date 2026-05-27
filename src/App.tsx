@@ -1,36 +1,53 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
-import Login from "./pages/Login";
-import Layout from "./pages/Layout";
-import Dashboard from "./pages/Dashboard";
-import Rooms from "./pages/Rooms";
-import Guests from "./pages/Guests";
-import Reservations from "./pages/Reservations";
-import ReservationsForm from "./pages/ReservationsForm";
-import RegistartionForm from "./components/login/registrationForm";
+import Login from "./pages/login/Login";
+import Layout from "./pages/admin/Layout";
 import LoginForm from "./components/login/LoginForm";
+import RegistartionForm from "./components/login/RegistrationForm";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Rooms from "./pages/user/Rooms";
+import ReservationsForm from "./pages/user/ReservationsForm";
+import Dashboard from "./pages/admin/Dashboard";
+import Guests from "./pages/admin/Guests";
+import Reservations from "./pages/admin/Reservations";
+import LayoutUser from "./pages/user/LayoutUser";
+import WelcomePage from "./pages/user/WelcomePage";
+import GestionePrenotazione from "./components/user/GestionePrenotazione";
+import CalendarioCamera from "./pages/user/CalendarioCamera";
 
 function App() {
   return (
     <BrowserRouter>
-      {/* ROUTE PER CLIENTI */}
       <Routes>
         <Route path="/" element={<Login />}>
-          <Route path="/" element={<LoginForm />} />
+          <Route index element={<LoginForm />} />
           <Route path="registrationForm" element={<RegistartionForm />} />
         </Route>
-        <Route path="/user" element={<Layout />}>
-          <Route path="rooms" element={<Rooms />} />
-          <Route path="reservationForm/:id" element={<ReservationsForm />} />
+        {/* ROUTE PER CLIENTI */}
+        <Route element={<ProtectedRoute role="user" />}>
+          <Route path="/user/:id" element={<LayoutUser />}>
+            <Route index element={<WelcomePage />} />
+            <Route path="rooms" element={<Rooms />} />
+            <Route
+              path="reservationForm/:roomId"
+              element={<ReservationsForm />}
+            />
+            <Route
+              path="gestionePrenotazione/:reservationId"
+              element={<GestionePrenotazione />}
+            />
+            <Route path="calendario/:roomId" element={<CalendarioCamera />} />
+          </Route>
         </Route>
         {/* ROUTE PER ADMIN */}
-        <Route path="/admin" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="rooms" element={<Rooms />} />
-          <Route path="guests" element={<Guests />} />
-          <Route path="reservations" element={<Reservations />} />
-          <Route path="reservationForm/:id" element={<ReservationsForm />} />
+        <Route element={<ProtectedRoute role="admin" />}>
+          <Route path="/admin" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="guests" element={<Guests />} />
+            <Route path="reservations" element={<Reservations />} />
+          </Route>
         </Route>
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

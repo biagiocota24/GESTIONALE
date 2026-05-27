@@ -5,11 +5,11 @@ import {
   MdAttachMoney,
   MdPeople,
 } from "react-icons/md";
-import StateCard from "../components/dashboard/StateCards";
-import SliceChart from "../components/dashboard/SliceChart";
-import MyBarChart from "../components/dashboard/BarChart";
-import Tabella from "../components/dashboard/Tabella";
-import { useHotelStore } from "../zustand/store";
+import { useHotelStore } from "../../zustand/store";
+import StateCard from "../../components/admin/StateCards";
+import SliceChart from "../../components/admin/SliceChart";
+import MyBarChart from "../../components/admin/BarChart";
+import Tabella from "../../components/admin/Tabella";
 
 const Dashboard = function () {
   const { rooms, guests, reservations } = useHotelStore();

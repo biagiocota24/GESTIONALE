@@ -2,36 +2,38 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
-import { getNames } from "country-list";
 import Row from "react-bootstrap/Row";
 import { useNavigate, useParams } from "react-router-dom";
-import { useHotelStore } from "../zustand/store";
+import { useHotelStore } from "../../zustand/store";
 
 const ReservationsForm = function () {
-  const { rooms, guests, addReservation, addGuest} = useHotelStore();
-
+  const {
+    rooms,
+    addReservation,
+    currentUser,
+    reservations,
+    updateReservation,
+    updateRoomState,
+  } = useHotelStore();
   const navigate = useNavigate();
   const params = useParams();
-  const thisRoom = rooms.find((r) => r.id === Number(params.id));
+  const thisRoom = rooms.find((r) => r.id === Number(params.roomId));
+  //CONTROLLO CHE thisRoom ESISTA
+  if (!thisRoom) return <p>Room not found</p>;
+  const thisReservation = reservations.find((r) => r.roomId === thisRoom.id);
   const [validated, setValidated] = useState(false);
-  const nationalities = getNames();
   const today: string = new Date().toISOString().split("T")[0];
 
   //TUTTI IL VALORI DEL FORM
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [telephone, setTelephone] = useState("");
-  const [nationality, setNationality] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
-  const [docType, setDocType] = useState("");
-  const [document, setDocument] = useState("");
-  const [checkIn, setCheckIn] = useState(today);
-  const [checkOut, setCheckOut] = useState("");
-  const [adultsNr, setAdultsNr] = useState<number>(0);
-  const [kidsNr, setKidsNr] = useState<number>(0);
-  const [specialNotes, setSpecialNotes] = useState("");
+  const [checkIn, setCheckIn] = useState(thisReservation?.checkIn || today);
+  const [checkOut, setCheckOut] = useState(thisReservation?.checkOut || "");
+  const [adultsNr, setAdultsNr] = useState<number>(
+    thisReservation?.adults || 0,
+  );
+  const [kidsNr, setKidsNr] = useState<number>(thisReservation?.kids || 0);
+  const [specialNotes, setSpecialNotes] = useState(
+    thisReservation?.specialNotes || "",
+  );
 
   // ── CALCOLA IL TOTALE ──
   const nights = Math.ceil(
@@ -42,30 +44,16 @@ const ReservationsForm = function () {
   const handleSubmit = (e) => {
     const form = e.currentTarget;
     e.preventDefault();
-
     if (form.checkValidity() === false) {
       e.stopPropagation();
       setValidated(true);
       return;
     }
-
     setValidated(true);
-
-    // ── COSTRUISCI IL GUEST ──
-    const newGuest: Guest = {
-      id: Date.now(),
-      name: firstName,
-      surname: lastName,
-      phoneNumber: telephone,
-      nationality: nationality,
-      document: document,
-      email: "",
-    };
-
     // ── COSTRUISCo LA PRENOTAZIONE ──
     const newReservation: Reservation = {
       id: Date.now() + 1,
-      guestId: newGuest.id,
+      guestId: currentUser.id,
       roomId: thisRoom.id,
       checkIn: checkIn,
       checkOut: checkOut,
@@ -75,21 +63,16 @@ const ReservationsForm = function () {
       specialNotes: specialNotes,
       totalPrice: nights * thisRoom.price,
     };
-
-    console.log("New Guest:", newGuest);
-    console.log("New Reservation:", newReservation);
-
     // ← qui dopo aggiungeremo dispatch per salvare in Redux
-    addReservation(newReservation);
-
-    const alreadyGuest = guests.find((g) => newGuest.id === g.id);
-    if (!alreadyGuest) {
-      addGuest(newGuest);
+    if (thisReservation) {
+      updateReservation({ ...newReservation, id: thisReservation.id });
+      updateRoomState(thisRoom.id, "occupied");
+    } else {
+      addReservation(newReservation);
+      updateRoomState(thisRoom.id, "occupied");
     }
-    navigate("/");
+    navigate(`/user/${currentUser?.id}`);
   };
-
-  if (!thisRoom) return <p>Room not found</p>;
   return (
     <>
       <Form
@@ -98,176 +81,6 @@ const ReservationsForm = function () {
         onSubmit={handleSubmit}
         className="container mt-3"
       >
-        <h5 className="text-center mt-3">Dati personali</h5>
-        <Row className="mb-3" xs={1} lg={2}>
-          <Form.Group as={Col} controlId="validationFirstName">
-            <Form.Label>First name</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              placeholder="First name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} controlId="validationLastName">
-            <Form.Label>Last name</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              placeholder="Last name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group as={Col} controlId="validationTelephone">
-            <Form.Label>Telephon</Form.Label>
-            <Form.Control
-              type="tel"
-              placeholder="Telephone"
-              minLength={10}
-              maxLength={15}
-              required
-              value={telephone}
-              onChange={(e) => setTelephone(e.target.value)}
-            />
-            <Form.Control.Feedback type="invalid">
-              Please provide a valid telephone number
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} controlId="validationNationality">
-            <Form.Label>Nationality</Form.Label>
-            <Form.Select
-              required
-              value={nationality}
-              onChange={(e) => setNationality(e.target.value)}
-            >
-              <option value="">Select</option>
-              {nationalities.map((n) => {
-                return (
-                  <option key={n} value={n}>
-                    {n}
-                  </option>
-                );
-              })}
-            </Form.Select>
-            <Form.Control.Feedback type="invalid">
-              Campo obbligatorio
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} controlId="validationCity">
-            <Form.Label>City</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="City"
-              required
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-            />
-            <Form.Control.Feedback type="invalid">
-              Please provide a valid city.
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} controlId="validationState">
-            <Form.Label>State</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="State"
-              required
-              value={state}
-              onChange={(e) => setState(e.target.value)}
-            />
-            <Form.Control.Feedback type="invalid">
-              Please provide a valid state.
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} controlId="validationZip">
-            <Form.Label>Zip</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Zip"
-              required
-              value={zip}
-              onChange={(e) => setZip(e.target.value)}
-            />
-            <Form.Control.Feedback type="invalid">
-              Please provide a valid zip.
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} controlId="validationDocType">
-            <Form.Label>Type of document</Form.Label>
-            <Form.Select
-              required
-              value={docType}
-              onChange={(e) => setDocType(e.target.value)}
-            >
-              <option value="">seleziona</option>
-              <option value="Personal Id">Personal Id</option>
-              <option value="Passport">Passport</option>
-              <option value="Drive License">Drive License</option>
-            </Form.Select>
-          </Form.Group>
-          {docType === "Personal Id" && (
-            <Form.Group controlId="validationIdCard">
-              <Form.Label>ID Card Number</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="ex. CA12345AB"
-                pattern="[A-Z]{2}[0-9]{5}[A-Z]{2}"
-                required
-                value={document}
-                onChange={(e) => setDocument(e.target.value)}
-              />
-              <Form.Text className="text-muted">
-                Format: 2 letters, 5 numbers, 2 letters
-              </Form.Text>
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid ID Card number
-              </Form.Control.Feedback>
-            </Form.Group>
-          )}
-          {docType === "Passport" && (
-            <Form.Group controlId="validationPassport">
-              <Form.Label>Passport Number</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="ex. AB1234567"
-                pattern="[A-Z]{2}[0-9]{7}"
-                required
-                value={document}
-                onChange={(e) => setDocument(e.target.value)}
-              />
-              <Form.Text className="text-muted">
-                Format: 2 letters followed by 7 numbers
-              </Form.Text>
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid Passport number
-              </Form.Control.Feedback>
-            </Form.Group>
-          )}
-          {docType === "Drive License" && (
-            <Form.Group controlId="validationLicense">
-              <Form.Label>Driving License Number</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="ex. U99999AB999T"
-                pattern="[A-Z0-9]{8,12}"
-                required
-                value={document}
-                onChange={(e) => setDocument(e.target.value)}
-              />
-              <Form.Text className="text-muted">
-                Format: 8 to 12 alphanumeric characters
-              </Form.Text>
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid Driving License number
-              </Form.Control.Feedback>
-            </Form.Group>
-          )}
-        </Row>
         <h5 className="text-center mt-3">Dati prenotazione</h5>
         <Row className="mb-3" xs={1} lg={2}>
           <Form.Group controlId="validationCheckIn">
@@ -471,12 +284,14 @@ const ReservationsForm = function () {
         <Form.Group className="mb-3">
           <Form.Check
             required
-            label="Agree to terms and conditions"
+            label="Accetto termini e condizioni"
             feedback="You must agree before submitting."
             feedbackType="invalid"
           />
         </Form.Group>
-        <Button type="submit">Submit form</Button>
+        <Button type="submit">
+          {thisReservation ? "Modifica" : "Prenota"}
+        </Button>
       </Form>
     </>
   );

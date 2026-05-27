@@ -1,7 +1,8 @@
 import { Col, Container, Row } from "react-bootstrap";
 import { useState } from "react";
-import GuestCards from "../components/guests/GuestCards";
-import { useHotelStore } from "../zustand/store";
+import { useHotelStore } from "../../zustand/store";
+import GuestCards from "../../components/admin/GuestCards";
+
 
 const Guests = function () {
   const { guests } = useHotelStore();

@@ -1,18 +1,17 @@
-import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import ReservationCard from "../components/reservations/ReservationsCards";
-import { useHotelStore } from "../zustand/store";
+import { useState } from "react";
+import { useHotelStore } from "../../zustand/store";
+import RoomCard from "../../components/user/RoomCard";
 
-const Reservations = function () {
-  const { rooms, guests, reservations } = useHotelStore();
+const Rooms = function () {
+  const { rooms } = useHotelStore();
   const [select, setSelect] = useState("all");
 
-  const filteredReservations =
-    select === "all"
-      ? reservations
-      : (reservations ?? []).filter((res) => res.reservationState === select);
+  const filteredRooms =
+    select === "all" ? rooms : rooms.filter((r) => r.roomState === select);
+
   return (
-    <Container fluid="lg">
+    <Container>
       <Row>
         <Col className="text-center">
           <div
@@ -26,12 +25,9 @@ const Reservations = function () {
             }}
           >
             <div>
-              <p style={{ fontSize: 22, fontWeight: 500, margin: 0 }}>
-                Reservations
-              </p>
+              <p style={{ fontSize: 22, fontWeight: 500, margin: 0 }}>Rooms</p>
               <p style={{ fontSize: 13, color: "#888", margin: "4px 0 0" }}>
-                {filteredReservations ? filteredReservations.length : 0} total
-                Reservations
+                {filteredRooms.length} rooms total
               </p>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -51,28 +47,22 @@ const Reservations = function () {
                 }}
               >
                 <option value="all">All</option>
-                <option value="confirmed">Confimed</option>
-                <option value="completed">Completed</option>
-                <option value="waiting">Waiting</option>
-                <option value="canceled">Canceled</option>
+                <option value="free">Free</option>
+                <option value="occupied">Occupied</option>
+                <option value="cleaning">Cleaning</option>
+                <option value="maintenance">Maintenance</option>
               </select>
             </div>
           </div>
         </Col>
       </Row>
-      <Row className="g-3">
-        {(filteredReservations ?? []).map((r) => (
-          <Col key={r.id} xs={12} md={6} xl={4}>
-            <ReservationCard
-              reservation={r}
-              guest={guests.find((g) => g.id === r.guestId)}
-              room={rooms.find((rm) => rm.id === r.roomId)}
-            />
-          </Col>
-        ))}
+      <Row>
+        {filteredRooms.map((room) => {
+          return <RoomCard room={room} key={room.id} />;
+        })}
       </Row>
     </Container>
   );
 };
 
-export default Reservations;
+export default Rooms;

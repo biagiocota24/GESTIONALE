@@ -36,7 +36,7 @@ const Layout = function () {
                 style={{ maxWidth: "220px" }}
               >
                 <img
-                  src="public/Design-ohne-Titel1.png"
+                  src="/Design-ohne-Titel1.png"
                   alt="logo"
                   style={{ width: "100%" }}
                 />

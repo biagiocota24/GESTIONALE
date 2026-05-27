@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getNames } from "country-list";
 import { useHotelStore } from "../../zustand/store";
+import type { Guest } from "../../interfaces/interfaces";
 
 const RegistartionForm = function () {
+  const navigate = useNavigate();
   const nations = getNames();
+  const [validated, setValidated] = useState(false);
+  //
   const [nome, setNome] = useState("");
   const [cognome, setCognome] = useState("");
   const [email, setEmail] = useState("");
@@ -19,6 +23,15 @@ const RegistartionForm = function () {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const form = e.currentTarget;
+
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+      return;
+    }
+
+    setValidated(true);
 
     const newGuest: Guest = {
       id: Date.now(),
@@ -30,8 +43,10 @@ const RegistartionForm = function () {
       nationality: nationality,
       docType: docType,
       document: document,
+      role: "user",
     };
     addGuest(newGuest);
+    navigate("/");
   };
 
   return (
@@ -39,7 +54,7 @@ const RegistartionForm = function () {
       <Row className="text-center mt-2">
         <h1>Hotel Casa Brunetti</h1>
       </Row>
-      <Form onSubmit={handleSubmit}>
+      <Form noValidate onSubmit={handleSubmit} validated={validated}>
         <Row className="gap-2 justify-content-center">
           {/* NOME */}
           <Form.Group as={Col} lg={8}>
@@ -48,18 +63,24 @@ const RegistartionForm = function () {
               placeholder="Nome"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
+              required
             ></Form.Control>
-            <Form.Control.Feedback>Inserisci il nome</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">
+              Inserisci il nome
+            </Form.Control.Feedback>
           </Form.Group>
           {/* COGNOME */}
           <Form.Group as={Col} lg={8}>
             <Form.Control
-              type="cognome"
+              type="text"
               placeholder="Cognome"
               value={cognome}
               onChange={(e) => setCognome(e.target.value)}
+              required
             ></Form.Control>
-            <Form.Control.Feedback>Inserisci il cognome</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">
+              Inserisci il cognome
+            </Form.Control.Feedback>
           </Form.Group>
           {/* EMAIL */}
           <Form.Group as={Col} lg={8}>
@@ -68,8 +89,11 @@ const RegistartionForm = function () {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             ></Form.Control>
-            <Form.Control.Feedback>Email non valida !!</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">
+              Email non valida !!
+            </Form.Control.Feedback>
           </Form.Group>
           {/* PASSWORD */}
           <Form.Group as={Col} lg={8}>
@@ -78,8 +102,9 @@ const RegistartionForm = function () {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             ></Form.Control>
-            <Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">
               Password non valida !!
             </Form.Control.Feedback>
           </Form.Group>
@@ -90,6 +115,7 @@ const RegistartionForm = function () {
               placeholder="Phone number"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
+              required
             ></Form.Control>
             <Form.Control.Feedback type="invalid">
               Inserisci un numero di telefono valido
@@ -100,10 +126,15 @@ const RegistartionForm = function () {
             <Form.Select
               value={nationality}
               onChange={(e) => setNationality(e.target.value)}
+              required
             >
               <option value="">Seleziona</option>
               {nations.map((n) => {
-                return <option value={n}>{n}</option>;
+                return (
+                  <option value={n} key={n}>
+                    {n}
+                  </option>
+                );
               })}
             </Form.Select>
             <Form.Control.Feedback type="invalid">
@@ -113,9 +144,12 @@ const RegistartionForm = function () {
           {/* TIPO DI DOCUMENTO */}
           <Form.Group as={Col} lg={8} controlId="validationDocType">
             <Form.Select
-              required
               value={docType}
-              onChange={(e) => setDocType(e.target.value)}
+              onChange={(e) => {
+                setDocType(e.target.value);
+                setDocument("");
+              }}
+              required
             >
               <option value="">seleziona tipo di documento</option>
               <option value="Personal Id">Personal Id</option>
@@ -131,9 +165,9 @@ const RegistartionForm = function () {
                 type="text"
                 placeholder="ex. CA12345AB"
                 pattern="[A-Z]{2}[0-9]{5}[A-Z]{2}"
-                required
                 value={document}
                 onChange={(e) => setDocument(e.target.value)}
+                required
               />
               <Form.Text className="text-muted">
                 Format: 2 letters, 5 numbers, 2 letters
@@ -151,9 +185,9 @@ const RegistartionForm = function () {
                 type="text"
                 placeholder="ex. AB1234567"
                 pattern="[A-Z]{2}[0-9]{7}"
-                required
                 value={document}
                 onChange={(e) => setDocument(e.target.value)}
+                required
               />
               <Form.Text className="text-muted">
                 Format: 2 letters followed by 7 numbers
@@ -171,9 +205,9 @@ const RegistartionForm = function () {
                 type="text"
                 placeholder="ex. U99999AB999T"
                 pattern="[A-Z0-9]{8,12}"
-                required
                 value={document}
                 onChange={(e) => setDocument(e.target.value)}
+                required
               />
               <Form.Text className="text-muted">
                 Format: 8 to 12 alphanumeric characters
@@ -184,7 +218,7 @@ const RegistartionForm = function () {
             </Form.Group>
           )}
           <Col lg={6} className="text-center">
-            <Button>Accedi</Button>
+            <Button type="submit">Registrati</Button>
           </Col>
         </Row>
       </Form>

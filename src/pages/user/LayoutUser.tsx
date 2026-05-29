@@ -62,14 +62,14 @@ const LayoutUser = function () {
                   <span>{<MdBedroomParent />}</span>
                   <span>Rooms</span>
                 </Link>
-                <Link
-                  onClick={() => logout()}
-                  to="/login"
-                  className={` p-2 ${location.pathname === "/login" ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+                <span
+                  className={` p-2 d-flex gap-2 fs-5 link-inattivo`}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setModalType("logout")}
                 >
                   <span>{<MdPeople />}</span>
                   <span>Logout</span>
-                </Link>
+                </span>
                 <NavDropdown title="Lo scopriremo" id="basic-nav-dropdown">
                   <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.2">
@@ -130,7 +130,7 @@ const LayoutUser = function () {
       <ConfirmModal
         show={modalType === "logout"}
         title="Conferma logout"
-        body="Sei sicuro suca di voler uscire?"
+        body="Sei sicuro di voler uscire?"
         confirmLabel="esci"
         onConfirm={logout}
         onClose={() => setModalType(null)}

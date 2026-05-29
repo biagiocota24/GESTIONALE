@@ -101,6 +101,36 @@ export const initialRooms: Room[] = [
   },
 ];
 
+export const admins: admin[] = [
+  {
+    id: 3242342,
+    name: "Biagio",
+    surname: "Cota",
+    role: "admin",
+    email: "biagiocota24@gmail.com",
+    phoneNumber: "3319156710",
+    password: "brunetti",
+  },
+  {
+    id: 3276867,
+    name: "Laura",
+    surname: "Bianchi",
+    role: "admin",
+    email: "laura.bianchi@hotel.it",
+    phoneNumber: "3289876543",
+    password: "laura123",
+  },
+  {
+    id: 67656565,
+    name: "Giovanni",
+    surname: "Ferrari",
+    role: "admin",
+    email: "giovanni.ferrari@hotel.it",
+    phoneNumber: "3351122334",
+    password: "giovanni123",
+  },
+];
+
 // src/data/mockReservations.ts
 import type { Reservation } from "../interfaces/interfaces";
 
@@ -128,10 +158,11 @@ export const generateMockReservations = (
     return {
       id: Date.now() + i,
       guestId: guestIds[randomInt(0, guestIds.length - 1)],
-      roomId: roomIds[randomInt(0, roomIds.length - 1)],
+      roomId: randomInt(1, 10),
       checkIn,
       checkOut,
-      reservationState: ["waiting", "confirmed", "cancelled"][randomInt(0, 2)],
+      // reservationState: ["waiting", "confirmed", "cancelled"][randomInt(0, 2)],
+      reservationState: "waiting",
       adults: randomInt(1, 3),
       kids: randomInt(0, 2),
       specialNotes: "",

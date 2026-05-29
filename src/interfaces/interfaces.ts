@@ -42,3 +42,13 @@ export interface User {
   role: "admin";
   password: string;
 }
+
+export interface admin {
+  id: number;
+  name: string;
+  surname: string;
+  role: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+}

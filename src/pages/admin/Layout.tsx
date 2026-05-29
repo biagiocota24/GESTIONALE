@@ -5,21 +5,27 @@ import {
   MdDashboard,
   MdPeople,
 } from "react-icons/md";
-import { Link, Outlet, useLocation } from "react-router-dom";
-const links = [
-  { to: "/", label: "Dashboard", icon: <MdDashboard size={18} /> },
-  { to: "/rooms", label: "Rooms", icon: <MdBedroomParent size={18} /> },
-  { to: "/guests", label: "Guests", icon: <MdPeople size={18} /> },
-  {
-    to: "/reservations",
-    label: "Reservations",
-    icon: <MdCalendarMonth size={18} />,
-  },
-  { to: "/login", label: "Login", icon: <MdPeople size={18} /> },
-];
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useMatch,
+  useParams,
+} from "react-router-dom";
+import { useHotelStore } from "../../zustand/store";
+import ConfirmModal from "../../components/Modal";
+import { useState } from "react";
 
 const Layout = function () {
+  const { setCurrentAdmin } = useHotelStore();
   const location = useLocation();
+  const params = useParams();
+  const isDashboard = useMatch("/admin/:adminId");
+  const [modalType, setModalType] = useState<ModalType>(null);
+
+  const logout = () => {
+    setCurrentAdmin(null);
+  };
 
   return (
     <Container fluid className="p-0">
@@ -45,31 +51,35 @@ const Layout = function () {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse className="mobile-collapse">
               <Nav className="me-auto">
-                {links.map((link) => {
-                  return (
-                    <Link
-                      key={link.label}
-                      to={link.to}
-                      className={`nav-link ${location.pathname === link.to ? "active" : ""}`}
-                    >
-                      <span>{link.icon}</span>
-                      <span>{link.label}</span>
-                    </Link>
-                  );
-                })}
-                <NavDropdown title="Lo scopriremo" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.2">
-                    Another action
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.3">
-                    Something
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action/3.4">
-                    Separated link
-                  </NavDropdown.Item>
-                </NavDropdown>
+                <Link
+                  to={`/admin/${params.adminId}`}
+                  className={` p-2 ${isDashboard ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+                >
+                  <span>{<MdDashboard />}</span>
+                  <span>Dashboard</span>
+                </Link>
+                <Link
+                  to={`/admin/${params.adminId}/guests`}
+                  className={` p-2 ${location.pathname.includes("guests") ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+                >
+                  <span>{<MdPeople />}</span>
+                  <span>Guests</span>
+                </Link>
+                <Link
+                  to={`/admin/${params.adminId}/reservations`}
+                  className={` p-2 ${location.pathname.includes("reservations") ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+                >
+                  <span>{<MdCalendarMonth />}</span>
+                  <span>Reservations</span>
+                </Link>
+                <span
+                  className={` p-2 d-flex gap-2 fs-5 link-inattivo`}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setModalType("logout")}
+                >
+                  <span>{<MdPeople />}</span>
+                  <span>Logout</span>
+                </span>
               </Nav>
             </Navbar.Collapse>
           </Container>
@@ -83,24 +93,41 @@ const Layout = function () {
               style={{ maxWidth: "250px" }}
             >
               <img
-                src="public/Design-ohne-Titel1.png"
+                src="/Design-ohne-Titel1.png"
                 alt="logo"
                 className="w-100"
               />
             </div>
             <div className="d-flex flex-column gap-2 mt-5 px-3">
-              {links.map((link) => {
-                return (
-                  <Link
-                    key={link.label}
-                    to={link.to}
-                    className={` p-2 ${location.pathname === link.to ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
-                  >
-                    <span>{link.icon}</span>
-                    <span>{link.label}</span>
-                  </Link>
-                );
-              })}
+              <Link
+                to={`/admin/${params.adminId}`}
+                className={` p-2 ${isDashboard ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+              >
+                <span>{<MdDashboard />}</span>
+                <span>Dashboard</span>
+              </Link>
+              <Link
+                to={`/admin/${params.adminId}/guests`}
+                className={` p-2 ${location.pathname.includes("guests") ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+              >
+                <span>{<MdPeople />}</span>
+                <span>Guests</span>
+              </Link>
+              <Link
+                to={`/admin/${params.adminId}/reservations`}
+                className={` p-2 ${location.pathname.includes("reservations") ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+              >
+                <span>{<MdCalendarMonth />}</span>
+                <span>Reservations</span>
+              </Link>
+              <span
+                className={` p-2 d-flex gap-2 fs-5 link-inattivo`}
+                style={{ cursor: "pointer" }}
+                onClick={() => setModalType("logout")}
+              >
+                <span>{<MdPeople />}</span>
+                <span>Logout</span>
+              </span>
             </div>
           </aside>
         </Col>
@@ -108,6 +135,14 @@ const Layout = function () {
           <Outlet />
         </Col>
       </Row>
+      <ConfirmModal
+        show={modalType === "logout"}
+        title="Conferma logout"
+        body="Sei sicuro di voler uscire?"
+        confirmLabel="esci"
+        onConfirm={logout}
+        onClose={() => setModalType(null)}
+      />
     </Container>
   );
 };

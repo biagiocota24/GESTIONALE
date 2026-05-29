@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { useNavigate, useParams } from "react-router-dom";
 import { useHotelStore } from "../../zustand/store";
+import { Toast } from "react-bootstrap";
 
 const ReservationsForm = function () {
   const {
@@ -18,9 +19,12 @@ const ReservationsForm = function () {
   const navigate = useNavigate();
   const params = useParams();
   const thisRoom = rooms.find((r) => r.id === Number(params.roomId));
-  //CONTROLLO CHE thisRoom ESISTA
-  if (!thisRoom) return <p>Room not found</p>;
+  const [showToast, setShowToast] = useState(false);
+
   const thisReservation = reservations.find((r) => r.roomId === thisRoom.id);
+  const [stoModificando] = useState(!!thisReservation);
+  console.log(thisReservation);
+
   const [validated, setValidated] = useState(false);
   const today: string = new Date().toISOString().split("T")[0];
 
@@ -39,6 +43,9 @@ const ReservationsForm = function () {
   const nights = Math.ceil(
     (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86400000,
   );
+  
+  //CONTROLLO CHE thisRoom ESISTA
+  if (!thisRoom) return <p>Room not found</p>;
 
   //VERIFICA CHE I REQUISITI DEL FORM SIANO SODDISFATTI , SE NO MOSTRA I MESSAGGIO IN ROSSO DI ERRORE
   const handleSubmit = (e) => {
@@ -63,15 +70,22 @@ const ReservationsForm = function () {
       specialNotes: specialNotes,
       totalPrice: nights * thisRoom.price,
     };
-    // ← qui dopo aggiungeremo dispatch per salvare in Redux
+
     if (thisReservation) {
+      setShowToast(true);
+      setTimeout(() => {
+        navigate(`/user/${currentUser?.id}`);
+      }, 2500);
       updateReservation({ ...newReservation, id: thisReservation.id });
       updateRoomState(thisRoom.id, "occupied");
     } else {
+      setShowToast(true);
+      setTimeout(() => {
+        navigate(`/user/${currentUser?.id}`);
+      }, 2500);
       addReservation(newReservation);
       updateRoomState(thisRoom.id, "occupied");
     }
-    navigate(`/user/${currentUser?.id}`);
   };
   return (
     <>
@@ -293,6 +307,18 @@ const ReservationsForm = function () {
           {thisReservation ? "Modifica" : "Prenota"}
         </Button>
       </Form>
+      <Toast show={showToast} className="position-absolute bottom-0 end-0 m-3">
+        <Toast.Header className="bg-success text-light">
+          <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+          <strong className="me-auto">👍</strong>
+          <small>
+            {new Date().getHours()} : {new Date().getMinutes()}
+          </small>
+        </Toast.Header>
+        <Toast.Body>
+          {stoModificando ? "Prenotazione modificata" : "Prenotazione salvata"}
+        </Toast.Body>
+      </Toast>
     </>
   );
 };

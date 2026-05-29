@@ -56,6 +56,22 @@ const LoginLayout = function () {
             >
               Accedi
             </button>
+            <button
+              type="button"
+              style={{
+                padding: "7px 16px",
+                fontSize: 13,
+                fontWeight: 500,
+                borderRadius: 8,
+                border: "1px solid white",
+                background: "transparent",
+                color: "white",
+                cursor: "pointer",
+              }}
+              onClick={() => navigate("adminLogin")}
+            >
+              Accedi come amministratore
+            </button>
           </div>
         </Navbar>
       </div>
@@ -105,6 +121,22 @@ const LoginLayout = function () {
               >
                 Accedi
               </button>
+                          <button
+              type="button"
+              style={{
+                padding: "7px 16px",
+                fontSize: 13,
+                fontWeight: 500,
+                borderRadius: 8,
+                border: "1px solid white",
+                background: "transparent",
+                color: "white",
+                cursor: "pointer",
+              }}
+              onClick={() => navigate("adminLogin")}
+            >
+              Accedi come amministratore
+            </button>
             </div>
           </aside>
         </Col>

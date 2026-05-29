@@ -2,20 +2,27 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useHotelStore } from "../../zustand/store";
 import ConfirmModal, { type ModalType } from "../Modal";
 import { useState } from "react";
+import { Toast } from "react-bootstrap";
 
 const GestionePrenotazione = function () {
-  const { reservations, rooms, removeReservation, currentUser ,updateRoomState } =
-    useHotelStore();
+  const {
+    reservations,
+    rooms,
+    removeReservation,
+    currentUser,
+    updateRoomState,
+  } = useHotelStore();
   const { reservationId } = useParams();
   const navigate = useNavigate();
   const [modalType, setModalType] = useState<ModalType>(null);
+  const [showToast, setShowToast] = useState(false);
 
   const thisReservation = reservations.find(
     (r) => r.id === Number(reservationId),
   );
   const room = rooms.find((r) => r.id === thisReservation?.roomId);
 
-  if (!thisReservation) return <p>Prenotazione non trovata</p>;
+  if (!thisReservation && !showToast) return <p>Prenotazione non trovata</p>;
 
   const checkIn = new Date(thisReservation.checkIn);
   const checkOut = new Date(thisReservation.checkOut);
@@ -28,9 +35,13 @@ const GestionePrenotazione = function () {
     d.toLocaleDateString("it-IT", { weekday: "long" });
 
   const handleDelete = () => {
-    removeReservation(thisReservation);
-    updateRoomState(thisReservation.roomId , "free")
-    navigate(-1);
+    setShowToast(true);
+    setTimeout(() => {
+      removeReservation(thisReservation);
+      updateRoomState(thisReservation.roomId, "free");
+      setShowToast(false);
+      navigate(`/user/${currentUser.id}`);
+    }, 1500);
   };
 
   return (
@@ -308,7 +319,7 @@ const GestionePrenotazione = function () {
           ✏️ Modifica
         </button>
         <button
-          onClick={() => navigate(`user/${currentUser.id}`)}
+          onClick={() => navigate(`/user/${currentUser.id}`)}
           style={{
             gridColumn: "1 / -1",
             display: "flex",
@@ -335,6 +346,16 @@ const GestionePrenotazione = function () {
         onConfirm={handleDelete}
         onClose={() => setModalType(null)}
       />
+      <Toast show={showToast} className="position-absolute bottom-0 end-0 m-3">
+        <Toast.Header className="bg-success text-light">
+          <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+          <strong className="me-auto">👍</strong>
+          <small>
+            {new Date().getHours()} : {new Date().getMinutes()}
+          </small>
+        </Toast.Header>
+        <Toast.Body>Prenotazione cancellata</Toast.Body>
+      </Toast>
     </div>
   );
 };

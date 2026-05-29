@@ -14,6 +14,7 @@ import LayoutUser from "./pages/user/LayoutUser";
 import WelcomePage from "./pages/user/WelcomePage";
 import GestionePrenotazione from "./components/user/GestionePrenotazione";
 import CalendarioCamera from "./pages/user/CalendarioCamera";
+import LoginAdminForm from "./components/login/LoginAdminForm";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />}>
           <Route index element={<LoginForm />} />
+          <Route path="adminLogin" element={<LoginAdminForm />} />
           <Route path="registrationForm" element={<RegistartionForm />} />
         </Route>
         {/* ROUTE PER CLIENTI */}
@@ -41,7 +43,7 @@ function App() {
         </Route>
         {/* ROUTE PER ADMIN */}
         <Route element={<ProtectedRoute role="admin" />}>
-          <Route path="/admin" element={<Layout />}>
+          <Route path="/admin/:adminId" element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="guests" element={<Guests />} />
             <Route path="reservations" element={<Reservations />} />

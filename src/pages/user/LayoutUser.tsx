@@ -9,31 +9,42 @@ import {
   Row,
 } from "react-bootstrap";
 import { MdBedroomParent, MdPeople } from "react-icons/md";
-import { Link, Outlet, useLocation, useParams } from "react-router-dom";
+import { Link, Outlet, useLocation, useMatch, useNavigate, useParams } from "react-router-dom";
 import { useHotelStore } from "../../zustand/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConfirmModal, { type ModalType } from "../../components/Modal";
 
 const LayoutUser = function () {
-  const location = useLocation();
   const params = useParams();
+  const navigate = useNavigate()
   const { setCurrentUser } = useHotelStore();
   const [modalType, setModalType] = useState<ModalType>(null);
+  const isHome = useMatch("/user/:id")
+  const isRooms = useMatch("/user/:id/rooms")
+  const [expanded , setExpanded] = useState(false)
 
   const logout = () => {
     setCurrentUser(null);
   };
+
+  useEffect(()=>{
+    const handleClickOutside = ()=> setExpanded(false)
+    document.addEventListener("click" , handleClickOutside)
+    return()=> removeEventListener("click" , handleClickOutside)
+  },[])
 
   return (
     <Container fluid className="p-0">
       <div className="d-lg-none">
         <Navbar
           expand="lg"
+          expanded={expanded}
+          onClick={(e)=> e.stopPropagation()}
           className="bg-dark position-relative"
           data-bs-theme="dark"
         >
           <Container fluid>
-            <Navbar.Brand href="#home">
+            <Navbar.Brand onClick={()=> navigate(`/user/${params.id}`)} style={{cursor:"pointer"}}>
               <div
                 className="bg-light rounded-5 p-2"
                 style={{ maxWidth: "220px" }}
@@ -45,19 +56,21 @@ const LayoutUser = function () {
                 />
               </div>
             </Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={()=> setExpanded(prev => !prev)} />
             <Navbar.Collapse className="mobile-collapse">
               <Nav className="me-auto">
                 <Link
                   to={`/user/${params.id}`}
-                  className={` p-2 ${location.pathname === "/rooms" ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+                  className={` p-2 ${isHome ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+                  onClick={() => setExpanded(false)}
                 >
                   <span>{<MdBedroomParent />}</span>
                   <span>Home</span>
                 </Link>
                 <Link
                   to="rooms"
-                  className={` p-2 ${location.pathname === "/rooms" ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+                  className={` p-2 ${isRooms ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+                  onClick={() => setExpanded(false)}
                 >
                   <span>{<MdBedroomParent />}</span>
                   <span>Rooms</span>
@@ -100,14 +113,14 @@ const LayoutUser = function () {
             <div className="d-flex flex-column gap-2 mt-5 px-3">
               <Link
                 to={`/user/${params.id}`}
-                className={` p-2 ${location.pathname === "/rooms" ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+                className={` p-2 ${isHome ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
               >
                 <span>{<MdBedroomParent />}</span>
                 <span>Home</span>
               </Link>
               <Link
                 to="rooms"
-                className={` p-2 ${location.pathname === "/rooms" ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
+                className={` p-2 ${isRooms ? "link-attivo" : "link-inattivo"} d-flex gap-2 fs-5`}
               >
                 <span>{<MdBedroomParent />}</span>
                 <span>Rooms</span>

@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import type { Reservation, Guest, Room } from "../../interfaces/interfaces";
+import { useHotelStore } from "../../zustand/store";
 
 const statusColors: Record<string, { bg: string; color: string }> = {
   confirmed: { bg: "#e1f5ee", color: "#0f6e56" },
@@ -18,6 +20,17 @@ const ReservationCard = function ({
   guest,
   room,
 }: ReservationCardProps) {
+  const { setReservationState, updateRoomState } = useHotelStore();
+
+  const today = new Date().toISOString().split("T")[0];
+
+  useEffect(() => {
+    if (r.checkOut < today) {
+      setReservationState(r.id, "completed");
+      updateRoomState(r.roomId, "free");
+    }
+  }, []);
+
   return (
     <div
       style={{
@@ -132,6 +145,44 @@ const ReservationCard = function ({
           📝 {r.specialNotes}
         </div>
       )}
+      <div className="d-flex justify-content-around mt-3 gap-2">
+        {r.reservationState === "waiting" && (
+          <button
+            style={{
+              flex: 1,
+              padding: "8px 16px",
+              borderRadius: 8,
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: "pointer",
+              background: "#e1f5ee",
+              color: "#0f6e56",
+              border: "0.5px solid #a8dfc9",
+            }}
+            onClick={() => setReservationState(r.id, "confirmed")}
+          >
+            ✓ Conferma
+          </button>
+        )}
+        {r.reservationState === "waiting" && (
+          <button
+            style={{
+              flex: 1,
+              padding: "8px 16px",
+              borderRadius: 8,
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: "pointer",
+              background: "#fcebeb",
+              color: "#a32d2d",
+              border: "0.5px solid #f09595",
+            }}
+            onClick={() => setReservationState(r.id, "canceled")}
+          >
+            ✕ Rifiuta
+          </button>
+        )}
+      </div>
     </div>
   );
 };

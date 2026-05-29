@@ -25,6 +25,7 @@ const ReservationCard = ({ reservation }: { reservation: Reservation }) => {
         borderRadius: 12,
         overflow: "hidden",
       }}
+      className="h-100 d-flex flex-column"
     >
       {/* HEADER */}
       <div style={{ padding: "1.5rem 1.5rem 1rem" }}>
@@ -178,6 +179,7 @@ const ReservationCard = ({ reservation }: { reservation: Reservation }) => {
           justifyContent: "space-between",
           alignItems: "center",
         }}
+        className="flex-grow-1"
       >
         <div>
           <p

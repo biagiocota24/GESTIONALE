@@ -31,7 +31,7 @@ interface HotelStoreInterface {
   setCurrentUser: (user: Guest | null) => void;
   loadReservations: (reservation: Reservation[]) => void;
   //ADMINS
-  setCurrentAdmin: (admin: admin) => void;
+  setCurrentAdmin: (admin: admin | null) => void;
 }
 
 export const useHotelStore = create<HotelStoreInterface>()(

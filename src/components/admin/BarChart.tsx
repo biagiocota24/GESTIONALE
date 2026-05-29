@@ -21,7 +21,7 @@ const MyBarChart = function ({data,colors}:BarChartProps) {
       <YAxis />
       <Tooltip />
       <Bar dataKey="price" radius={[6, 6, 0, 0]}>
-        {data.map((entry, i) => (
+        {data.map((_entry, i) => (
           <Cell key={i} fill={colors[i]} />
         ))}
       </Bar>

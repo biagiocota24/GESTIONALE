@@ -96,8 +96,8 @@ const Dashboard = function () {
   return (
     <Container fluid className="mt-2">
       <Row>
-        {stats.map((state) => {
-          return <StateCard key={state.label} state={state} />;
+        {stats.map((stat) => {
+          return <StateCard key={stat.label} {...stat} />;
         })}
       </Row>
       <Row md={2} className="mt-3">

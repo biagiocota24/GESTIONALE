@@ -13,7 +13,7 @@ const LoginAdminForm = function () {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
 
@@ -31,15 +31,14 @@ const LoginAdminForm = function () {
       setError("Credenziali non valide");
       return;
     }
-    setCurrentAdmin(admin)
-    
-    navigate(`/admin/${admin.id}`)
+    setCurrentAdmin(admin);
 
+    navigate(`/admin/${admin.id}`);
   };
 
   return (
     <Container>
-        <h1>login amministratore</h1>
+      <h1>login amministratore</h1>
       <Row className="text-center mt-2">
         <h1>Hotel Casa Brunetti</h1>
       </Row>

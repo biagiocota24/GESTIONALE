@@ -1,3 +1,5 @@
+import type { Guest, Reservation, Room } from "../../interfaces/interfaces";
+
 const thStyle: React.CSSProperties = {
   textAlign: "left",
   padding: "8px 12px",

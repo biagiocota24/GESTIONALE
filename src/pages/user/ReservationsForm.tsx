@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
+import type { Reservation } from "../../interfaces/interfaces";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -21,7 +22,7 @@ const ReservationsForm = function () {
   const thisRoom = rooms.find((r) => r.id === Number(params.roomId));
   const [showToast, setShowToast] = useState(false);
 
-  const thisReservation = reservations.find((r) => r.roomId === thisRoom.id);
+  const thisReservation = thisRoom ? reservations.find((r) => r.roomId === thisRoom.id) : undefined;
   const [stoModificando] = useState(!!thisReservation);
   console.log(thisReservation);
 
@@ -48,7 +49,7 @@ const ReservationsForm = function () {
   if (!thisRoom) return <p>Room not found</p>;
 
   //VERIFICA CHE I REQUISITI DEL FORM SIANO SODDISFATTI , SE NO MOSTRA I MESSAGGIO IN ROSSO DI ERRORE
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const form = e.currentTarget;
     e.preventDefault();
     if (form.checkValidity() === false) {
@@ -60,7 +61,7 @@ const ReservationsForm = function () {
     // ── COSTRUISCo LA PRENOTAZIONE ──
     const newReservation: Reservation = {
       id: Date.now() + 1,
-      guestId: currentUser.id,
+      guestId: currentUser?.id ?? 0,
       roomId: thisRoom.id,
       checkIn: checkIn,
       checkOut: checkOut,
@@ -125,7 +126,7 @@ const ReservationsForm = function () {
               onChange={(e) => setAdultsNr(Number(e.target.value))}
             >
               <option value="">Seleziona</option>
-              {Array.from({ length: thisRoom.capacity }).map((p, i) => {
+              {Array.from({ length: thisRoom.capacity }).map((_, i) => {
                 return (
                   <option key={`${thisRoom.roomNumber}` + i + 2} value={i + 1}>
                     {i + 1}

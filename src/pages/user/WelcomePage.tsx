@@ -10,7 +10,7 @@ const WelcomePage = function () {
   const { currentUser, reservations, updateRoomState } = useHotelStore();
   const [filtro, setFiltro] = useState("");
   const myReservations = reservations.filter(
-    (r) => r.guestId === currentUser.id,
+    (r) => r.guestId === currentUser?.id,
   );
 
   const myReservationFiltered = myReservations.filter((r) =>
@@ -34,7 +34,7 @@ const WelcomePage = function () {
   return (
     <Container fluid="lg">
       <Row className="text-center mt-2">
-        <h1>Benvenuto {currentUser.name} !</h1>
+        <h1>Benvenuto {currentUser?.name} !</h1>
       </Row>
       <Row className="g-3">
         <h2 className="text-center mt-4 mb-2">

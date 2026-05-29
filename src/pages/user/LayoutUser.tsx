@@ -1,15 +1,13 @@
 import {
-  Button,
   Col,
   Container,
-  Modal,
   Nav,
   Navbar,
   NavDropdown,
   Row,
 } from "react-bootstrap";
 import { MdBedroomParent, MdPeople } from "react-icons/md";
-import { Link, Outlet, useLocation, useMatch, useNavigate, useParams } from "react-router-dom";
+import { Link, Outlet, useMatch, useNavigate, useParams } from "react-router-dom";
 import { useHotelStore } from "../../zustand/store";
 import { useEffect, useState } from "react";
 import ConfirmModal, { type ModalType } from "../../components/Modal";

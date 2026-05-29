@@ -143,7 +143,7 @@ const RoomCard = function ({ room }: RoomCardProps) {
                 background: "transparent",
                 cursor: "pointer",
               }}
-              onClick={() => navigate(`/user/${currentUser.id}/calendario/${room.id}`)}
+              onClick={() => navigate(`/user/${currentUser?.id}/calendario/${room.id}`)}
             >
               Details
             </button>

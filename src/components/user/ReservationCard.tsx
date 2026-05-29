@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import type { Reservation } from "../../interfaces/interfaces";
 import { useHotelStore } from "../../zustand/store";
 
 const ReservationCard = ({ reservation }: { reservation: Reservation }) => {

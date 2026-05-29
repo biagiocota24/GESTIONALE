@@ -6,7 +6,9 @@ interface guestCardProps {
   filteredGuests: Guest[];
 }
 
-const GuestCards = function ({ filteredGuests, search }: guestCardProps) {
+const GuestCards = function ({
+  filteredGuests,
+}: guestCardProps) {
   const getInitials = (name: string, surname: string) =>
     `${name[0]}${surname[0]}`.toUpperCase();
 

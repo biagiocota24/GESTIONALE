@@ -16,7 +16,7 @@ const SliceChart = function ({ data, colors }: SliceChartProps) {
         cy="50%" // centro verticale
         outerRadius={100} // raggio esterno
       >
-        {data.map((category, index) => {
+        {data.map((_category, index) => {
           return <Cell key={index} fill={colors[index]} />;
         })}
       </Pie>

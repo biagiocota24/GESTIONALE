@@ -22,7 +22,7 @@ const GestionePrenotazione = function () {
   );
   const room = rooms.find((r) => r.id === thisReservation?.roomId);
 
-  if (!thisReservation && !showToast) return <p>Prenotazione non trovata</p>;
+  if (!thisReservation) return <p>Prenotazione non trovata</p>;
 
   const checkIn = new Date(thisReservation.checkIn);
   const checkOut = new Date(thisReservation.checkOut);
@@ -40,7 +40,7 @@ const GestionePrenotazione = function () {
       removeReservation(thisReservation);
       updateRoomState(thisReservation.roomId, "free");
       setShowToast(false);
-      navigate(`/user/${currentUser.id}`);
+      navigate(`/user/${currentUser?.id}`);
     }, 1500);
   };
 
@@ -319,7 +319,7 @@ const GestionePrenotazione = function () {
           ✏️ Modifica
         </button>
         <button
-          onClick={() => navigate(`/user/${currentUser.id}`)}
+          onClick={() => navigate(`/user/${currentUser?.id}`)}
           style={{
             gridColumn: "1 / -1",
             display: "flex",

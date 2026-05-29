@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { getNames } from "country-list";
@@ -21,7 +21,7 @@ const RegistartionForm = function () {
 
   const { addGuest } = useHotelStore();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
 
@@ -129,7 +129,7 @@ const RegistartionForm = function () {
               required
             >
               <option value="">Seleziona</option>
-              {nations.map((n) => {
+              {nations.map((n: string) => {
                 return (
                   <option value={n} key={n}>
                     {n}

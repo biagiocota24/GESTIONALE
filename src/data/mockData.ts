@@ -1,3 +1,7 @@
+import type { Room } from "../interfaces/interfaces";
+import type { admin } from "../interfaces/interfaces";
+import type { Reservation } from "../interfaces/interfaces";
+
 export const initialRooms: Room[] = [
   {
     id: 1,
@@ -132,8 +136,6 @@ export const admins: admin[] = [
 ];
 
 // src/data/mockReservations.ts
-import type { Reservation } from "../interfaces/interfaces";
-
 const randomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -146,7 +148,7 @@ const randomDate = (start: Date, end: Date) => {
 
 export const generateMockReservations = (
   guestIds: number[],
-  roomIds: number[],
+  _roomIds: number[],
 ): Reservation[] => {
   return Array.from({ length: 50 }, (_, i) => {
     const checkIn = randomDate(new Date(), new Date("2027-12-01"));

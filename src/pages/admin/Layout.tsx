@@ -1,6 +1,5 @@
-import { Col, Container, Nav, Navbar, NavDropdown, Row } from "react-bootstrap";
+import { Col, Container, Nav, Navbar, Row } from "react-bootstrap";
 import {
-  MdBedroomParent,
   MdCalendarMonth,
   MdDashboard,
   MdPeople,
@@ -13,7 +12,7 @@ import {
   useParams,
 } from "react-router-dom";
 import { useHotelStore } from "../../zustand/store";
-import ConfirmModal from "../../components/Modal";
+import ConfirmModal, { type ModalType } from "../../components/Modal";
 import { useState } from "react";
 
 const Layout = function () {
